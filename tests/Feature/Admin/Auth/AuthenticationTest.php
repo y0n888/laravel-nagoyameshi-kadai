@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use Illuminate\Support\Facades\Log;
 
 class AuthenticationTest extends TestCase
 {
@@ -33,11 +32,7 @@ class AuthenticationTest extends TestCase
             'email' => $admin->email,
             'password' => 'nagoyameshi',
         ]);
-        // Log::info(Auth::guard('admin')->check());
-        // $response->assertStatus(200);
-        // $currentUser = Auth::user();
-        // Log::info($currentUser->name);
- 
+        
         $this->assertTrue(Auth::guard('admin')->check());
         $response->assertRedirect(RouteServiceProvider::ADMIN_HOME);
     }
