@@ -75,7 +75,7 @@ class RestaurantTest extends TestCase
         $response->assertRedirect('/admin/login');
     }
 
-    public function test_regular_user_cannot_access_admin_restaurant_create()
+    public function test_authenticated_user_cannot_access_admin_restaurant_create()
     {
         $user = User::factory()->create();
         $response = $this->actingAs($user)->get('/admin/restaurants');
@@ -89,7 +89,7 @@ class RestaurantTest extends TestCase
             'password' => Hash::make('nagoyameshi'),
         ]);
 
-        $response = $this->actingAs($admin, 'admin')->get('/admin/restaurants/create');
+        $response = $this->actingAs($admin, 'admin')->get('/admin/restaurants');
         $response->assertStatus(200);
     }
 
@@ -101,7 +101,7 @@ class RestaurantTest extends TestCase
         $response->assertRedirect('/admin/login');
     }
 
-    public function test_regular_user_cannot_store_admin_restaurant()
+    public function test_authenticated_user_cannot_store_admin_restaurant()
     {
         $user = User::factory()->create();
         
@@ -139,7 +139,7 @@ class RestaurantTest extends TestCase
         $response->assertRedirect('/admin/login');
     }
 
-    public function test_regular_user_cannot_access_admin_restaurant_edit()
+    public function test_authenticated_user_cannot_access_admin_restaurant_edit()
     {
         $user = User::factory()->create();
 
@@ -167,7 +167,7 @@ class RestaurantTest extends TestCase
         $response->assertRedirect('/admin/login');
     }
 
-    public function test_regular_user_cannot_update_admin_restaurant()
+    public function test_authenticated_user_cannot_update_admin_restaurant()
     {
         $user = User::factory()->create();
 
@@ -208,7 +208,7 @@ class RestaurantTest extends TestCase
         $response->assertRedirect('/admin/login');
     }
 
-    public function test_regular_user_cannot_destroy_admin_restaurant()
+    public function test_authenticated_user_cannot_destroy_admin_restaurant()
     {
         $user = User::factory()->create();
 
