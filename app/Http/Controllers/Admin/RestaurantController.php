@@ -80,7 +80,7 @@ class RestaurantController extends Controller
     // 編集ページ
     public function edit(Restaurant $restaurant)
     {
-        $categories = $restaurant->categories;
+        $categories = Category::all();
         $category_ids = $restaurant->categories->pluck('id')->toArray();
 
         return view('admin.restaurants.edit', compact('restaurant', 'categories', 'category_ids'));
