@@ -5,6 +5,8 @@ use App\Http\Controllers\Admin;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\RestaurantController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\CompanyController;
+use App\Http\Controllers\Admin\TermController;
 
 
 /*
@@ -29,8 +31,14 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth:admin
 
     Route::resource('users', Admin\UserController::class)->only(['index', 'show']);
 
-    Route::resource('restaurants', RestaurantController::class);
+    Route::resource('restaurants',  Admin\RestaurantController::class);
 
-    Route::resource('categories', CategoryController::class);
+    Route::resource('categories',  Admin\CategoryController::class);
+
+    Route::resource('company',  Admin\CompanyController::class);
+
+    Route::resource('terms',  Admin\TermController::class);
+
+    
 });
 
