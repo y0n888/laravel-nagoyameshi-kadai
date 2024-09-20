@@ -2,9 +2,10 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Models\Admin;
+use App\Models\Category;
 use App\Models\Restaurant;
 use App\Models\User;
-use App\Models\Admin;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -115,8 +116,11 @@ class RestaurantTest extends TestCase
             'email' => 'admin@example.com',
             'password' => Hash::make('nagoyameshi'),
         ]);
-        
-        $response = $this->actingAs($admin, 'admin')->post('/admin/restaurants', [
+
+        $categories = Category::factory()->count(3)->create();
+        $categoryIds = $categories->pluck('id')->toArray();
+
+        $restaurant_data = [
             'name' => 'Store Name',
             'description' => 'A brief description of the store.',
             'lowest_price' => 1000,
@@ -126,10 +130,25 @@ class RestaurantTest extends TestCase
             'opening_time' => '09:00',
             'closing_time' => '22:00',
             'seating_capacity' => 50,
-        ]);
+            'category_ids' => $categoryIds,
+        ];
+
+        $response = $this->actingAs($admin, 'admin')->post('/admin/restaurants', $restaurant_data);
 
         $response->assertStatus(302);
         $response->assertRedirect('/admin/restaurants');
+
+        $restaurantId = Restaurant::latest()->first()->id;
+
+        unset($restaurant_data['category_ids']);
+        $this->assertDatabaseHas('restaurants', $restaurant_data);
+
+        foreach ($categoryIds as $categoryId) {
+            $this->assertDatabaseHas('category_restaurant', [
+                'restaurant_id' => $restaurantId,
+                'category_id' => $categoryId,
+            ]);
+        }
     }
 
     // editアクション（店舗編集ページ）
@@ -182,9 +201,33 @@ class RestaurantTest extends TestCase
             'password' => Hash::make('nagoyameshi'),
         ]);
 
-        $user = Restaurant::factory()->create(['id' => 1]);
+        $restaurant = Restaurant::factory()->create(['id' => 1]);
 
-        $response = $this->actingAs($admin, 'admin')->patch('/admin/restaurants/1', [
+        $categories = Category::factory()->count(3)->create();
+        $categoryIds = $categories->pluck('id')->toArray();
+
+        $new_restaurant_data = [
+            'name' => 'Updated Store Name',
+            'description' => 'A brief description of the store.',
+            'lowest_price' => 1000,
+            'highest_price' => 5000,
+            'postal_code' => '1234567',
+            'address' => '123 Main St',
+            'opening_time' => '09:00',
+            'closing_time' => '22:00',
+            'seating_capacity' => 50,
+            'category_ids' => $categoryIds,
+        ];
+
+        // unset($new_restaurant_data['category_ids']);
+
+        $response = $this->actingAs($admin, 'admin')->patch('/admin/restaurants/1', $new_restaurant_data);
+
+        $response->assertStatus(302);
+        $response->assertRedirect('/admin/restaurants/1');
+
+        $this->assertDatabaseHas('restaurants', [
+            'id' => 1,
             'name' => 'Updated Store Name',
             'description' => 'A brief description of the store.',
             'lowest_price' => 1000,
@@ -196,8 +239,14 @@ class RestaurantTest extends TestCase
             'seating_capacity' => 50,
         ]);
 
-        $response->assertStatus(302);
-        $response->assertRedirect('/admin/restaurants/1');
+        $restaurant->categories()->sync($categoryIds);
+
+        foreach ($categoryIds as $categoryId) {
+            $this->assertDatabaseHas('category_restaurant', [
+                'restaurant_id' => $restaurant->id,
+                'category_id' => $categoryId,
+            ]);
+        }
     }
 
 
