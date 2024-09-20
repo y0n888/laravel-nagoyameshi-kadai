@@ -74,7 +74,7 @@ class RestaurantController extends Controller
         $category_ids = array_filter($request->input('category_ids'));
         $restaurant->categories()->sync($category_ids);
 
-        $regular_holiday_ids = array_filter($request->input('regular_holiday_ids'));
+        $regular_holiday_ids = array_filter($request->input('regular_holiday_ids') ?? []);
         $restaurant->regularHolidays()->sync($regular_holiday_ids);
 
         return redirect()->route('admin.restaurants.index')
@@ -122,7 +122,7 @@ class RestaurantController extends Controller
         $category_ids = $request->input('category_ids', []);
         $restaurant->categories()->sync(array_filter($category_ids));
 
-        $regular_holiday_ids = array_filter($request->input('regular_holiday_ids'));
+        $regular_holiday_ids = array_filter($request->input('regular_holiday_ids') ?? []);
         $restaurant->regularHolidays()->sync($regular_holiday_ids);
 
         return redirect()->route('admin.restaurants.show', $restaurant->id)
