@@ -52,6 +52,6 @@ Route::group(['middleware' => 'guest:admin'], function () {
         Route::resource('user', UserMembersController::class)->only(['index', 'edit', 'update']);
     });
 
-    Route::resource('restaurants', RestaurantMembersController::class);
+    Route::resource('restaurants', RestaurantMembersController::class)->only(['index', 'show']);
 });
 
