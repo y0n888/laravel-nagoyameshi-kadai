@@ -53,7 +53,10 @@ class RestaurantController extends Controller
         }
 
         $restaurants = $query->sortable($sort_query)
-                            ->orderByRaw($sort_query ? '' : 'created_at desc')
+                            ->orderBy(
+                                key($sort_query) ?? 'created_at',
+                                $sort_query ? reset($sort_query) : 'desc'
+                                )
                             ->paginate(15);
 
         $categories = Category::all();
