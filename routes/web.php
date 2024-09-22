@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController as UserMembersController;
 use App\Http\Controllers\RestaurantController as RestaurantMembersController;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\RestaurantController;
@@ -75,3 +76,28 @@ Route::get('subscription/cancel', [SubscriptionController::class, 'cancel'])
 
 Route::delete('subscription', [SubscriptionController::class, 'destroy'])
     ->middleware(['auth', 'verified', 'guest:admin', Subscribed::class])->name('subscription.destroy');
+
+Route::group(['middleware' => ['auth', 'verified', 'guest:admin']], function () {
+    Route::get('/restaurants/{restaurant}/reviews', [ReviewController::class, 'index'])
+        ->name('restaurants.reviews.index');
+
+    Route::get('/restaurants/{restaurant}/reviews/create', [ReviewController::class, 'create'])
+        ->middleware(Subscribed::class)
+        ->name('restaurants.reviews.create');
+
+    Route::post('/restaurants/{restaurant}/reviews', [ReviewController::class, 'store'])
+        ->middleware(Subscribed::class)    
+        ->name('restaurants.reviews.store');
+        
+    Route::get('/restaurants/{restaurant}/reviews/{review}/edit', [ReviewController::class, 'edit'])
+        ->middleware(Subscribed::class)
+        ->name('restaurants.reviews.edit');
+        
+    Route::put('/restaurants/{restaurant}/reviews/{review}', [ReviewController::class, 'update'])
+        ->middleware(Subscribed::class)
+        ->name('restaurants.reviews.update');
+
+    Route::delete('/restaurants/{restaurant}/reviews/{review}', [ReviewController::class, 'destroy'])
+        ->middleware(Subscribed::class)
+        ->name('restaurants.reviews.destroy'); 
+});
