@@ -4,12 +4,15 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController as UserMembersController;
 use App\Http\Controllers\RestaurantController as RestaurantMembersController;
+use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\RestaurantController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\TermController;
+use App\Http\Middleware\Subscribed;
+use App\Http\Middleware\NotSubscribed;
 
 
 /*
@@ -23,9 +26,9 @@ use App\Http\Controllers\Admin\TermController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 require __DIR__.'/auth.php';
 
@@ -55,3 +58,20 @@ Route::group(['middleware' => 'guest:admin'], function () {
     Route::resource('restaurants', RestaurantMembersController::class)->only(['index', 'show']);
 });
 
+Route::get('subscription/create', [SubscriptionController::class, 'create'])
+    ->middleware(['auth', 'verified', 'guest:admin', NotSubscribed::class])->name('subscription.create');
+
+Route::post('subscription', [SubscriptionController::class, 'store'])
+    ->middleware(['auth', 'verified', 'guest:admin', NotSubscribed::class])->name('subscription.store');
+
+Route::get('subscription/edit', [SubscriptionController::class, 'edit'])
+    ->middleware(['auth', 'verified', 'guest:admin', Subscribed::class])->name('subscription.edit');
+
+Route::put('subscription', [SubscriptionController::class, 'update'])
+    ->middleware(['auth', 'verified', 'guest:admin', Subscribed::class])->name('subscription.update');
+
+Route::get('subscription/cancel', [SubscriptionController::class, 'cancel'])
+    ->middleware(['auth', 'verified', 'guest:admin', Subscribed::class])->name('subscription.cancel');
+
+Route::delete('subscription', [SubscriptionController::class, 'destroy'])
+    ->middleware(['auth', 'verified', 'guest:admin', Subscribed::class])->name('subscription.destroy');
