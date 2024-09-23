@@ -157,7 +157,7 @@ class SubscriptionTest extends TestCase
         $request_parameter = [
             'paymentMethodId' => 'pm_card_mastercard'
         ];
-        $response = $this->post(route('subscription.store'), $request_parameter);
+        $response = $this->patch(route('subscription.store'), $request_parameter);
 
         $response->assertRedirect(route('login'));
     }
@@ -170,8 +170,8 @@ class SubscriptionTest extends TestCase
             'paymentMethodId' => 'pm_card_mastercard'
         ];
 
-        $response = $this->actingAs($user)->post(route('subscription.update'), $request_parameter);
-        $response->assertRedirect(route('home'));
+        $response = $this->actingAs($user)->patch(route('subscription.update'), $request_parameter);
+        $response->assertRedirect(route('subscription.create'));
         // $response->assertStatus(403);
     }
 
@@ -186,9 +186,9 @@ class SubscriptionTest extends TestCase
             'paymentMethodId' => 'pm_card_mastercard'
         ];
 
-        $response = $this->actingAs($user)->post(route('subscription.update'), $request_parameter);
+        $response = $this->actingAs($user)->patch(route('subscription.update'), $request_parameter);
         // $response->assertRedirect(route('home'));
-        $response->assertRedirect(route('subscription.edit'));
+        $response->assertRedirect(route('home'));
 
         $updated_payment_method_id = $user->refresh()->defaultPaymentMethod()->id;
 
@@ -208,7 +208,7 @@ class SubscriptionTest extends TestCase
             'paymentMethodId' => 'pm_card_mastercard'
         ];
 
-        $response = $this->post(route('subscription.update'), $request_parameter);
+        $response = $this->patch(route('subscription.update'), $request_parameter);
 
         $response->assertRedirect(route('admin.home'));
     }
@@ -259,7 +259,7 @@ class SubscriptionTest extends TestCase
         $request_parameter = [
             'paymentMethodId' => 'pm_card_visa'
         ];
-        $response = $this->post(route('subscription.destroy'), $request_parameter);
+        $response = $this->delete(route('subscription.destroy'), $request_parameter);
 
         $response->assertRedirect(route('login'));
     }
@@ -272,8 +272,8 @@ class SubscriptionTest extends TestCase
             'paymentMethodId' => 'pm_card_visa'
         ];
 
-        $response = $this->actingAs($user)->post(route('subscription.destroy'), $request_parameter);
-        $response->assertRedirect(route('home'));
+        $response = $this->actingAs($user)->delete(route('subscription.destroy'), $request_parameter);
+        $response->assertRedirect(route('subscription.create'));
 
         // $user = $user->fresh();
 
@@ -289,9 +289,9 @@ class SubscriptionTest extends TestCase
             'paymentMethodId' => 'pm_card_visa'
         ];
 
-        $response = $this->actingAs($user)->post(route('subscription.destroy'), $request_parameter);
+        $response = $this->actingAs($user)->delete(route('subscription.destroy'), $request_parameter);
         // $response->assertRedirect(route('home'));
-        $response->assertRedirect(route('subscription.edit'));
+        $response->assertRedirect(route('home'));
 
         $user = $user->fresh();
         $this->assertFalse($user->subscribed('premium_plan'));
@@ -310,7 +310,7 @@ class SubscriptionTest extends TestCase
             'paymentMethodId' => 'pm_card_visa'
         ];
 
-        $response = $this->post(route('subscription.destroy'), $request_parameter);
+        $response = $this->delete(route('subscription.destroy'), $request_parameter);
 
         $response->assertRedirect(route('admin.home'));
     }

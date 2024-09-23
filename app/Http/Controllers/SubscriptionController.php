@@ -37,11 +37,9 @@ class SubscriptionController extends Controller
     {
         $user = Auth::user();
 
-        $request->validate([
-            'paymentMethodId' => 'required|string',
-        ]);
+        
 
-        user()->updateDefaultPaymentMethod($request->paymentMethodId);
+        $user->updateDefaultPaymentMethod($request->paymentMethodId);
 
         return redirect()->route('home')->with('flash_message', 'お支払い方法を変更しました。');
     }
@@ -55,11 +53,9 @@ class SubscriptionController extends Controller
     {
         $user = Auth::user();
 
-        $request->validate([
-            'paymentMethodId' => 'required|string',
-        ]);
+        
 
-       user()->subscription('premium_plan')->cancel();
+       $user->subscription('premium_plan')->cancelNow();
 
         return redirect()->route('home')->with('flash_message', '有料プランを解約しました。');
     }
