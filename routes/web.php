@@ -7,6 +7,8 @@ use App\Http\Controllers\RestaurantController as RestaurantMembersController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\CompanyController as UserCompanyController;
+use App\Http\Controllers\TermController as UserTermController;
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\RestaurantController;
@@ -58,6 +60,10 @@ Route::group(['middleware' => 'guest:admin'], function () {
     });
 
     Route::resource('restaurants', RestaurantMembersController::class)->only(['index', 'show']);
+
+    Route::get('/company', [UserCompanyController::class, 'index'])->name('company.index');
+
+    Route::get('/terms', [UserTermController::class, 'index'])->name('terms.index');
 });
 
 Route::get('subscription/create', [SubscriptionController::class, 'create'])
