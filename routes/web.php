@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController as UserMembersController;
 use App\Http\Controllers\RestaurantController as RestaurantMembersController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\RestaurantController;
@@ -112,6 +113,6 @@ Route::group(['middleware' => ['auth', 'verified', 'guest:admin', Subscribed::cl
     Route::post('/restaurants/{restaurant}/reservations', [ReservationController::class, 'store'])
     ->name('restaurants.reservations.store');
 
-    Route::post('/reservations/{reservation}', [ReservationController::class, 'destroy'])
+    Route::delete('/reservations/{reservation}', [ReservationController::class, 'destroy'])
     ->name('reservations.destroy');
 });

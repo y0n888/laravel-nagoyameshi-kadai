@@ -14,16 +14,16 @@ class ReservationController extends Controller
     public function index() 
     {
         $reservations = Reservation::where('user_id', auth()->id())
-            ->orderBy('reservation_date', 'desc')
+            ->orderBy('reserved_datetime', 'desc')
             ->paginate(15);
 
-        return view('reservation.index', compact('reservations'));
+        return view('reservations.index', compact('reservations'));
     }
 
     // 予約ページ
     public function create(Restaurant $restaurant) 
     {
-        return view('reservation.create', compact('restaurant'));
+        return view('reservations.create', compact('restaurant'));
     }
 
     // 予約機能
@@ -42,18 +42,18 @@ class ReservationController extends Controller
             'user_id' => auth()->id(),
         ]);
 
-        return redirect()->route('reservation.index')->with('flash_message', '予約が完了しました。');
+        return redirect()->route('reservations.index')->with('flash_message', '予約が完了しました。');
     }
 
     // 予約キャンセル機能
-    public function destroy() 
+    public function destroy(Restaurant $restaurant, Reservation $reservation) 
     {
         if ($reservation->user_id !== auth()->id()) {
-            return redirect()->route('reservation.index')->with('error_message', '不正なアクセスです。');
+            return redirect()->route('reservations.index')->with('error_message', '不正なアクセスです。');
         }
 
         $reservation->delete();
 
-        return redirect()->route('reservation.index')->with('flash_message', '予約をキャンセルしました。');
+        return redirect()->route('reservations.index')->with('flash_message', '予約をキャンセルしました。');
     }
 }
