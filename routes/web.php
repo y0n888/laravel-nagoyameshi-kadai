@@ -101,3 +101,17 @@ Route::group(['middleware' => ['auth', 'verified', 'guest:admin']], function () 
         ->middleware(Subscribed::class)
         ->name('restaurants.reviews.destroy'); 
 });
+
+Route::group(['middleware' => ['auth', 'verified', 'guest:admin', Subscribed::class]], function () {
+    Route::get('/reservations', [ReservationController::class, 'index'])
+    ->name('reservations.index');
+
+    Route::get('/restaurants/{restaurant}/reservations/create', [ReservationController::class, 'create'])
+    ->name('restaurants.reservations.create');
+
+    Route::post('/restaurants/{restaurant}/reservations', [ReservationController::class, 'store'])
+    ->name('restaurants.reservations.store');
+
+    Route::post('/reservations/{reservation}', [ReservationController::class, 'destroy'])
+    ->name('reservations.destroy');
+});

@@ -31,7 +31,7 @@
                         <a class="nav-link link-dark" href="{{ route('restaurants.show', $restaurant) }}">トップ</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link link-dark" href="#">予約</a>
+                        <a class="nav-link link-dark" href="{{ route('restaurants.reservations.create', $restaurant) }}">予約</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active text-white nagoyameshi-bg" aria-current="page" href="{{ route('restaurants.reviews.index', $restaurant) }}">レビュー</a>
@@ -50,7 +50,7 @@
 
                 <form method="POST" action="{{ route('restaurants.reviews.update', [$restaurant, $review]) }}">
                     @csrf
-                    @method('PUT')
+                    @method('patch')
 
                     <div class="mb-3">
                         <label class="form-label text-md-left fw-bold">評価</label>
