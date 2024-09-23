@@ -55,4 +55,9 @@ class Restaurant extends Model
     {
         return $query->withCount('reservations')->orderBy('reservations_count', $direction);
     }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'restaurant_user');
+    }
 }
