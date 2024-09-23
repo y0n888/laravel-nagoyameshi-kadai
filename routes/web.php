@@ -68,7 +68,7 @@ Route::post('subscription', [SubscriptionController::class, 'store'])
 Route::get('subscription/edit', [SubscriptionController::class, 'edit'])
     ->middleware(['auth', 'verified', 'guest:admin', Subscribed::class])->name('subscription.edit');
 
-Route::put('subscription', [SubscriptionController::class, 'update'])
+Route::patch('subscription', [SubscriptionController::class, 'update'])
     ->middleware(['auth', 'verified', 'guest:admin', Subscribed::class])->name('subscription.update');
 
 Route::get('subscription/cancel', [SubscriptionController::class, 'cancel'])
