@@ -39,7 +39,7 @@ class RestaurantController extends Controller
                 $q->where('name', 'LIKE', "%{$keyword}%")
                 ->orWhere('address', 'LIKE', "%{$keyword}%")
                 ->orWhereHas('categories', function($query) use ($keyword) {
-                    $query->where('categories_name', 'LIKE', "%{$keyword}%");
+                    $query->where('name', 'LIKE', "%{$keyword}%");
                 });
             });
         }
