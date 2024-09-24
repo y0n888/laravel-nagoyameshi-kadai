@@ -9,6 +9,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\CompanyController as UserCompanyController;
 use App\Http\Controllers\TermController as UserTermController;
+use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\RestaurantController;
@@ -121,4 +122,15 @@ Route::group(['middleware' => ['auth', 'verified', 'guest:admin', Subscribed::cl
 
     Route::delete('/reservations/{reservation}', [ReservationController::class, 'destroy'])
     ->name('reservations.destroy');
+});
+
+Route::group(['middleware' => ['auth', 'verified', 'guest:admin', Subscribed::class]], function () {
+    Route::get('/favorites', [FavoriteController::class, 'index'])
+    ->name('favorites.index');
+
+    Route::post('/favorites/{restaurant_id}', [FavoriteController::class, 'store'])
+    ->name('favorites.store');
+
+    Route::delete('/favorites/{restaurant_id}', [FavoriteController::class, 'destroy'])
+    ->name('favorites.destroy');
 });
