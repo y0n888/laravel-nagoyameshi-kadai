@@ -14,7 +14,7 @@ class FavoriteController extends Controller
     {
         $user = Auth::user();
 
-        $favorite_restaurants = $user->restaurants()
+        $favorite_restaurants = $user->favorite_restaurants()
             ->orderBy('restaurant_user.created_at', 'desc')
             ->paginate(15);
 
@@ -22,16 +22,12 @@ class FavoriteController extends Controller
     }
 
     // お気に入り追加機能
-    public function store(Request $request, Restaurant $restaurant) 
+    public function store(Request $request, $restaurant_id) 
     {
         $user = Auth::user();
+        $restaurant = Restaurant::find($restaurant_id);
 
-        // $user->restaurants()->attach($restaurant->id);
-        if (!$user->restaurants()->where('restaurant_id', $restaurant->id)->exists()) {
-            $user->restaurants()->attach($restaurant->id);
-        }
-
-        dd($user->restaurants()->get());
+        $user->favorite_restaurants()->attach($restaurant->id);
 
         return redirect()->back()->with('flash_message', 'お気に入りに追加しました。');
     }
