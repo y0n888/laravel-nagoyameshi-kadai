@@ -33,11 +33,12 @@ class FavoriteController extends Controller
     }
 
     // お気に入り解除機能
-    public function destroy(Request $request, Restaurant $restaurant) 
+    public function destroy(Request $request, $restaurant_id) 
     {
         $user = Auth::user();
+        $restaurant = Restaurant::find($restaurant_id);
 
-        $user->restaurants()->detach($restaurant->id);
+        $user->favorite_restaurants()->detach($restaurant->id);
 
         return redirect()->back()->with('flash_message', 'お気に入りを解除しました。');
     }
